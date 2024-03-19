@@ -1,7 +1,7 @@
 const express = require("express");
 const fs = require("fs");
 const geolib = require("geolib");
-
+const path = require("path");
 const app = express();
 const PORT = 3000;
 app.use(express.json());
@@ -48,7 +48,10 @@ const handleGetPosition = (lat, lng) => {
   if (!lat || !lng) return;
   const point = [lng, lat];
 
-  const level1sBboxPath = `./data/gis/level1s_bbox.json`;
+  const level1sBboxPath = path.join(
+    process.cwd(),
+    `data/gis/level1s_bbox.json`
+  );
   const dataLevel1sBbox = fs.readFileSync(level1sBboxPath, "utf8");
   if (!dataLevel1sBbox) {
     result = {
@@ -74,7 +77,7 @@ const handleGetPosition = (lat, lng) => {
     if (!isPointInBbox(point, bbox)) {
       return;
     }
-    const jsonPath = `./data/gis/${level1Id}.json`;
+    const jsonPath = path.join(process.cwd(), `data/gis/${level1Id}.json`);
     const dataJsonPath = fs.readFileSync(jsonPath, "utf8");
     const e1 = JSON.parse(dataJsonPath);
     const level2s = e1?.level2s;
